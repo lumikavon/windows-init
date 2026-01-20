@@ -57,3 +57,4 @@ Write-Host "请重新打开终端以使环境变量生效。" -ForegroundColor Y
 # 显示 fnm 配置提示
 Write-Host "`n提示: 请将以下内容添加到 PowerShell 配置文件中以启用 fnm:" -ForegroundColor Cyan
 Write-Host '  fnm env --use-on-cd --shell power-shell | Out-String | Invoke-Expression' -ForegroundColor Gray
+

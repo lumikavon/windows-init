@@ -51,7 +51,7 @@ switch ($Action) {
         exit $LASTEXITCODE
     }
     "choco" {
-        & "$ScriptRoot\scripts\choco.ps1"
+        & gsudo pwsh -File "$ScriptRoot\scripts\choco.ps1"
         exit $LASTEXITCODE
     }
     "scoop" {
@@ -79,7 +79,7 @@ switch ($Action) {
         exit $LASTEXITCODE
     }
     "ssh" {
-        & gsudo pwsh -file "$ScriptRoot\scripts\ssh.ps1"
+        & gsudo pwsh -File "$ScriptRoot\scripts\ssh.ps1"
         exit $LASTEXITCODE
     }
     default {
