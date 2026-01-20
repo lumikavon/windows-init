@@ -1,6 +1,6 @@
-# 安装 Codex
+# 安装 OpenAI Codex CLI
 
-Write-Host "安装 Codex..." -ForegroundColor Green
+Write-Host "安装 OpenAI Codex CLI..." -ForegroundColor Green
 
 # 检查 npm 是否可用
 if (-not (Get-Command npm -ErrorAction SilentlyContinue)) {
@@ -8,8 +8,18 @@ if (-not (Get-Command npm -ErrorAction SilentlyContinue)) {
     exit 1
 }
 
+# 检查是否已安装
+if (Get-Command codex -ErrorAction SilentlyContinue) {
+    Write-Host "Codex CLI 已安装" -ForegroundColor Gray
+    $choice = Read-Host "是否重新安装? (y/N)"
+    if ($choice -ne "y" -and $choice -ne "Y") {
+        Write-Host "跳过安装" -ForegroundColor Yellow
+        exit 0
+    }
+}
+
 # 安装 Codex
-Write-Host "`n正在安装 Codex..." -ForegroundColor Cyan
+Write-Host "`n正在安装 OpenAI Codex CLI..." -ForegroundColor Cyan
 npm install -g @openai/codex
 
 if (-not (Get-Command codex -ErrorAction SilentlyContinue)) {
@@ -19,62 +29,27 @@ if (-not (Get-Command codex -ErrorAction SilentlyContinue)) {
 
 # 验证安装
 if (Get-Command codex -ErrorAction SilentlyContinue) {
-    Write-Host "`nCodex 安装成功！" -ForegroundColor Green
-    codex -V
+    Write-Host "`nCodex CLI 安装成功！" -ForegroundColor Green
 } else {
-    Write-Host "`nCodex 安装完成，请重新打开终端后验证" -ForegroundColor Yellow
+    Write-Host "`nCodex CLI 安装失败" -ForegroundColor Red
+    Write-Host "请重新打开终端后检查" -ForegroundColor Yellow
+    exit 1
 }
 
-# 配置 Codex
-Write-Host "`n配置 Codex..." -ForegroundColor Cyan
-
-$codexDir = "$env:USERPROFILE\.codex"
-
-# 删除并重新创建 .codex 目录
-if (Test-Path $codexDir) {
-    Write-Host "删除已存在的 .codex 目录..." -ForegroundColor Gray
-    Remove-Item -Path $codexDir -Recurse -Force
-}
-
-Write-Host "创建 .codex 目录..." -ForegroundColor Gray
-New-Item -ItemType Directory -Path $codexDir -Force | Out-Null
-
-# 配置 API Key
-$apiKey = Read-Host "请输入你的 API 密钥 (留空跳过配置)"
-
-if (-not [string]::IsNullOrWhiteSpace($apiKey)) {
-    # 创建 auth.json
-    $authJson = @{
-        OPENAI_API_KEY = $apiKey
-    } | ConvertTo-Json
-
-    $authPath = Join-Path $codexDir "auth.json"
-    $authJson | Out-File -FilePath $authPath -Encoding utf8
-    Write-Host "已创建 auth.json" -ForegroundColor Green
-
-    # 创建 config.toml
-    $configToml = @"
-model_provider = "aicodemirror"
-model = "gpt-5.2-codex"
-model_reasoning_effort = "xhigh"
-disable_response_storage = true
-preferred_auth_method = "apikey"
-
-[model_providers.aicodemirror]
-name = "aicodemirror"
-base_url = "https://api.aicodemirror.com/api/codex/backend-api/codex"
-wire_api = "responses"
-"@
-
-    $configPath = Join-Path $codexDir "config.toml"
-    $configToml | Out-File -FilePath $configPath -Encoding utf8
-    Write-Host "已创建 config.toml" -ForegroundColor Green
-} else {
-    Write-Host "跳过配置" -ForegroundColor Gray
-    Write-Host "`n请手动创建以下配置文件:" -ForegroundColor Yellow
-    Write-Host "  $codexDir\auth.json" -ForegroundColor Gray
-    Write-Host "  $codexDir\config.toml" -ForegroundColor Gray
-}
-
-Write-Host "`nCodex 配置完成！" -ForegroundColor Green
-Write-Host "请重新打开终端后运行 'codex' 开始使用" -ForegroundColor Yellow
+Write-Host ""
+Write-Host "=====================================" -ForegroundColor Cyan
+Write-Host "OpenAI Codex CLI 安装完成！" -ForegroundColor Green
+Write-Host "=====================================" -ForegroundColor Cyan
+Write-Host ""
+Write-Host "如何使用 Codex:" -ForegroundColor Yellow
+Write-Host "  1. 运行命令: codex" -ForegroundColor Gray
+Write-Host "  2. 选择 'Sign in with ChatGPT' 使用 ChatGPT 账户登录" -ForegroundColor Gray
+Write-Host "     (推荐使用 Plus/Pro/Team/Enterprise 计划)" -ForegroundColor Gray
+Write-Host ""
+Write-Host "或者使用 OpenAI API Key:" -ForegroundColor Yellow
+Write-Host "  1. 访问: https://platform.openai.com/api-keys" -ForegroundColor Gray
+Write-Host "  2. 创建 API Key" -ForegroundColor Gray
+Write-Host "  3. 运行 'codex' 并选择 API key 登录方式" -ForegroundColor Gray
+Write-Host ""
+Write-Host "文档: https://developers.openai.com/codex" -ForegroundColor Cyan
+Write-Host ""

@@ -18,8 +18,53 @@ if (-not $scoopInstalled) {
     }
 
     Write-Host "Scoop 安装完成！" -ForegroundColor Green
+
+    # 配置代理
+    Write-Host "`n是否需要配置代理?" -ForegroundColor Cyan
+    Write-Host "  1) 是" -ForegroundColor Gray
+    Write-Host "  2) 否 (跳过)" -ForegroundColor Gray
+    $proxyChoice = Read-Host "请输入序号 (1-2)"
+
+    if ($proxyChoice -eq "1") {
+        Write-Host "`n请输入代理地址 (格式: http://127.0.0.1:7890 或 [username:password@]host:port):" -ForegroundColor Cyan
+        $proxyUrl = Read-Host "代理地址"
+
+        if (-not [string]::IsNullOrWhiteSpace($proxyUrl)) {
+            Write-Host "正在配置代理..." -ForegroundColor Cyan
+            scoop config proxy $proxyUrl
+            Write-Host "代理配置完成！" -ForegroundColor Green
+        } else {
+            Write-Host "未输入代理地址，跳过配置" -ForegroundColor Yellow
+        }
+    } else {
+        Write-Host "跳过代理配置" -ForegroundColor Yellow
+    }
 } else {
     Write-Host "Scoop 已安装，跳过安装步骤" -ForegroundColor Gray
+
+    # 检查是否需要配置或修改代理
+    Write-Host "`n是否需要配置或修改代理?" -ForegroundColor Cyan
+    Write-Host "  1) 是" -ForegroundColor Gray
+    Write-Host "  2) 否 (跳过)" -ForegroundColor Gray
+    $proxyChoice = Read-Host "请输入序号 (1-2)"
+
+    if ($proxyChoice -eq "1") {
+        Write-Host "`n请输入代理地址 (格式: http://127.0.0.1:7890 或 [username:password@]host:port):" -ForegroundColor Cyan
+        Write-Host "留空则删除现有代理配置" -ForegroundColor Gray
+        $proxyUrl = Read-Host "代理地址"
+
+        if (-not [string]::IsNullOrWhiteSpace($proxyUrl)) {
+            Write-Host "正在配置代理..." -ForegroundColor Cyan
+            scoop config proxy $proxyUrl
+            Write-Host "代理配置完成！" -ForegroundColor Green
+        } else {
+            Write-Host "正在删除代理配置..." -ForegroundColor Cyan
+            scoop config rm proxy
+            Write-Host "代理配置已删除" -ForegroundColor Green
+        }
+    } else {
+        Write-Host "跳过代理配置" -ForegroundColor Yellow
+    }
 }
 
 # 安装 git (scoop 需要 git 来添加 bucket)
