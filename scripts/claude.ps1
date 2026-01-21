@@ -38,18 +38,11 @@ if (-not [string]::IsNullOrWhiteSpace($apiKey)) {
     # 设置系统环境变量 (需要管理员权限)
     $isAdmin = ([Security.Principal.WindowsPrincipal] [Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator)
 
-    if ($isAdmin) {
-        [System.Environment]::SetEnvironmentVariable("ANTHROPIC_BASE_URL", "https://api.aicodemirror.com/api/claudecode", "Machine")
-        [System.Environment]::SetEnvironmentVariable("ANTHROPIC_API_KEY", $apiKey, "Machine")
-        [System.Environment]::SetEnvironmentVariable("ANTHROPIC_AUTH_TOKEN", $apiKey, "Machine")
-        Write-Host "环境变量已设置（系统级）" -ForegroundColor Green
-    } else {
-        # 设置用户环境变量
-        [System.Environment]::SetEnvironmentVariable("ANTHROPIC_BASE_URL", "https://api.aicodemirror.com/api/claudecode", "User")
-        [System.Environment]::SetEnvironmentVariable("ANTHROPIC_API_KEY", $apiKey, "User")
-        [System.Environment]::SetEnvironmentVariable("ANTHROPIC_AUTH_TOKEN", $apiKey, "User")
-        Write-Host "环境变量已设置（用户级）" -ForegroundColor Green
-    }
+   # 设置用户环境变量
+    [System.Environment]::SetEnvironmentVariable("ANTHROPIC_BASE_URL", "https://api.aicodemirror.com/api/claudecode", "User")
+    [System.Environment]::SetEnvironmentVariable("ANTHROPIC_API_KEY", $apiKey, "User")
+    [System.Environment]::SetEnvironmentVariable("ANTHROPIC_AUTH_TOKEN", $apiKey, "User")
+    Write-Host "环境变量已设置（用户级）" -ForegroundColor Green
 
     # 更新当前会话的环境变量
     $env:ANTHROPIC_BASE_URL = "https://api.aicodemirror.com/api/claudecode"
@@ -63,9 +56,14 @@ if (-not [string]::IsNullOrWhiteSpace($apiKey)) {
     Write-Host "  ANTHROPIC_AUTH_TOKEN = 你的密钥" -ForegroundColor Gray
 }
 
+# 安装 API Key 切换工具到系统目录
+Write-Host "`n安装 API Key 切换工具..." -ForegroundColor Cyan
+gsudo pwsh -ExecutionPolicy Bypass -File "$PSScriptRoot/claude.install.assets.ps1"
+
 Write-Host "`nClaude Code 配置完成！" -ForegroundColor Green
 Write-Host "请重新打开终端后运行 'claude' 开始使用" -ForegroundColor Yellow
 
 Write-Host "`n常见问题:" -ForegroundColor Cyan
 Write-Host "  1. 若出现 'Unable to connect' 或 '401 Invalid token'，请检查环境变量配置" -ForegroundColor Gray
 Write-Host "  2. 若配置后仍不生效，尝试删除 ~/.claude.json 文件后重新启动 claude" -ForegroundColor Gray
+Write-Host "  3. 运行 'switch.claude.key' 可以快速切换 Claude/Codex/Gemini 的 API Key" -ForegroundColor Gray

@@ -31,17 +31,9 @@ $apiKey = Read-Host "请输入你的 API 密钥 (留空跳过配置)"
 
 if (-not [string]::IsNullOrWhiteSpace($apiKey)) {
     # 设置环境变量
-    $isAdmin = ([Security.Principal.WindowsPrincipal] [Security.Principal.WindowsIdentity]::GetCurrent()).IsInRole([Security.Principal.WindowsBuiltInRole]::Administrator)
-
-    if ($isAdmin) {
-        [System.Environment]::SetEnvironmentVariable("GOOGLE_GEMINI_BASE_URL", "https://api.aicodemirror.com/api/gemini", "Machine")
-        [System.Environment]::SetEnvironmentVariable("GEMINI_API_KEY", $apiKey, "Machine")
-        Write-Host "环境变量已设置（系统级）" -ForegroundColor Green
-    } else {
-        [System.Environment]::SetEnvironmentVariable("GOOGLE_GEMINI_BASE_URL", "https://api.aicodemirror.com/api/gemini", "User")
-        [System.Environment]::SetEnvironmentVariable("GEMINI_API_KEY", $apiKey, "User")
-        Write-Host "环境变量已设置（用户级）" -ForegroundColor Green
-    }
+    [System.Environment]::SetEnvironmentVariable("GOOGLE_GEMINI_BASE_URL", "https://api.aicodemirror.com/api/gemini", "User")
+    [System.Environment]::SetEnvironmentVariable("GEMINI_API_KEY", $apiKey, "User")
+    Write-Host "环境变量已设置（用户级）" -ForegroundColor Green
 
     # 更新当前会话的环境变量
     $env:GOOGLE_GEMINI_BASE_URL = "https://api.aicodemirror.com/api/gemini"

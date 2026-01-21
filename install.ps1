@@ -24,8 +24,7 @@ if ([string]::IsNullOrWhiteSpace($Action)) {
     Write-Host "  5) claude" -ForegroundColor Gray
     Write-Host "  6) codex" -ForegroundColor Gray
     Write-Host "  7) gemini" -ForegroundColor Gray
-    Write-Host "  8) vscode" -ForegroundColor Gray
-    Write-Host "  9) ssh" -ForegroundColor Gray
+    Write-Host "  8) ssh" -ForegroundColor Gray
     $choice = Read-Host "请输入序号 (1-9)"
     switch ($choice) {
         "1" { $Action = "base" }
@@ -35,8 +34,7 @@ if ([string]::IsNullOrWhiteSpace($Action)) {
         "5" { $Action = "claude" }
         "6" { $Action = "codex" }
         "7" { $Action = "gemini" }
-        "8" { $Action = "vscode" }
-        "9" { $Action = "ssh" }
+        "8" { $Action = "ssh" }
         default {
             Write-Host "无效选择: $choice" -ForegroundColor Red
             exit 1
@@ -74,17 +72,13 @@ switch ($Action) {
         & "$ScriptRoot\scripts\gemini.ps1"
         exit $LASTEXITCODE
     }
-    "vscode" {
-        & "$ScriptRoot\scripts\vscode.ps1"
-        exit $LASTEXITCODE
-    }
     "ssh" {
         & gsudo pwsh -File "$ScriptRoot\scripts\ssh.ps1"
         exit $LASTEXITCODE
     }
     default {
         Write-Host "未知的 action: $Action" -ForegroundColor Red
-        Write-Host "可用的 action: base, choco, scoop, node, claude, codex, gemini, vscode, ssh" -ForegroundColor Yellow
+        Write-Host "可用的 action: base, choco, scoop, node, claude, codex, gemini, ssh" -ForegroundColor Yellow
         exit 1
     }
 }
