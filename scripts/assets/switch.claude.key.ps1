@@ -45,6 +45,12 @@ switch ($choice) {
 
         # 配置 Codex
         Write-Host "  配置 Codex..." -ForegroundColor Gray
+
+        # 设置用户环境变量
+        Write-Host "`n正在设置环境变量..." -ForegroundColor Cyan
+        [System.Environment]::SetEnvironmentVariable("OPENAI_BASE_URL", "https://api.aicodemirror.com/api/codex/backend-api/codex", "User")
+        [System.Environment]::SetEnvironmentVariable("OPENAI_API_KEY", $apiKey, "User")
+        
         $codexDir = "$env:USERPROFILE\.codex"
         $authPath = Join-Path $codexDir "auth.json"
 
@@ -131,6 +137,11 @@ switch ($choice) {
             Write-Host "未输入 API Key，配置已取消" -ForegroundColor Yellow
             exit 1
         }
+
+        # 设置用户环境变量
+        Write-Host "`n正在设置环境变量..." -ForegroundColor Cyan
+        [System.Environment]::SetEnvironmentVariable("OPENAI_BASE_URL", "https://api.aicodemirror.com/api/codex/backend-api/codex", "User")
+        [System.Environment]::SetEnvironmentVariable("OPENAI_API_KEY", $apiKey, "User")
 
         $codexDir = "$env:USERPROFILE\.codex"
         $authPath = Join-Path $codexDir "auth.json"
