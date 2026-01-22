@@ -25,7 +25,10 @@ if ([string]::IsNullOrWhiteSpace($Action)) {
     Write-Host "  6) codex" -ForegroundColor Gray
     Write-Host "  7) gemini" -ForegroundColor Gray
     Write-Host "  8) ssh" -ForegroundColor Gray
-    $choice = Read-Host "请输入序号 (1-9)"
+    Write-Host "  9) hyperv" -ForegroundColor Gray
+    Write-Host "  10) wsl" -ForegroundColor Gray
+    Write-Host "  11) wsl-ubuntu" -ForegroundColor Gray
+    $choice = Read-Host "请输入序号 (1-11)"
     switch ($choice) {
         "1" { $Action = "base" }
         "2" { $Action = "choco" }
@@ -35,6 +38,9 @@ if ([string]::IsNullOrWhiteSpace($Action)) {
         "6" { $Action = "codex" }
         "7" { $Action = "gemini" }
         "8" { $Action = "ssh" }
+        "9" { $Action = "hyperv" }
+        "10" { $Action = "wsl" }
+        "11" { $Action = "wsl-ubuntu" }
         default {
             Write-Host "无效选择: $choice" -ForegroundColor Red
             exit 1
@@ -76,9 +82,21 @@ switch ($Action) {
         & gsudo pwsh -File "$ScriptRoot\scripts\ssh.ps1"
         exit $LASTEXITCODE
     }
+    "hyperv" {
+        & gsudo pwsh -File "$ScriptRoot\scripts\hyperv.ps1"
+        exit $LASTEXITCODE
+    }
+    "wsl" {
+        & gsudo pwsh -File "$ScriptRoot\scripts\wsl.ps1"
+        exit $LASTEXITCODE
+    }
+    "wsl-ubuntu" {
+        & "$ScriptRoot\scripts\wsl-ubuntu.ps1"
+        exit $LASTEXITCODE
+    }
     default {
         Write-Host "未知的 action: $Action" -ForegroundColor Red
-        Write-Host "可用的 action: base, choco, scoop, node, claude, codex, gemini, ssh" -ForegroundColor Yellow
+        Write-Host "可用的 action: base, choco, scoop, node, claude, codex, gemini, ssh, hyperv, wsl, wsl-ubuntu" -ForegroundColor Yellow
         exit 1
     }
 }
